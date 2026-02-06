@@ -1,0 +1,11 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: sample-mall-java
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+# 这里刻意不接入数据库，而是使用内存 Repository，保证环境足够简单

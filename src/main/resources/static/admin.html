@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商城管理后台 - Sample Mall</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: white;
+            padding: 24px 32px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            margin-bottom: 24px;
+        }
+
+        header h1 {
+            font-size: 24px;
+            color: #1a1a1a;
+            margin-bottom: 4px;
+        }
+
+        header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .tab-btn {
+            padding: 12px 24px;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            color: #6b7280;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover {
+            color: #3b82f6;
+        }
+
+        .tab-btn.active {
+            color: #3b82f6;
+            border-bottom-color: #3b82f6;
+        }
+
+        .tab-content {
+            display: none;
+            background: white;
+            padding: 24px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+            background: white;
+            color: #374151;
+        }
+
+        .btn:hover {
+            background: #f9fafb;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+            border-color: #ef4444;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 8px;
+            flex: 1;
+            max-width: 400px;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+        }
+
+        thead {
+            background: #f9fafb;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        th {
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #f3f4f6;
+            font-size: 14px;
+        }
+
+        tbody tr:hover {
+            background: #f9fafb;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.4);
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 24px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .modal-header h2 {
+            font-size: 18px;
+            color: #1a1a1a;
+        }
+
+        .close-btn {
+            cursor: pointer;
+            font-size: 24px;
+            color: #9ca3af;
+            line-height: 1;
+        }
+
+        .close-btn:hover {
+            color: #6b7280;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+
+        .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            border-radius: 6px;
+            color: white;
+            font-size: 14px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 2000;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .toast.success {
+            background: #10b981;
+        }
+
+        .toast.error {
+            background: #ef4444;
+        }
+
+        .toast.info {
+            background: #3b82f6;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            color: #6b7280;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #9ca3af;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .badge-success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-warning {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .price {
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>商城管理后台</h1>
+            <p>Sample Mall - 企业AI Coding 示例电商平台项目</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('products')">商品管理</button>
+            <button class="tab-btn" onclick="switchTab('orders')">订单管理</button>
+        </div>
+
+        <!-- 商品管理 -->
+        <div id="products-tab" class="tab-content active">
+            <div class="toolbar">
+                <button class="btn btn-primary" onclick="showProductModal()">+ 新增商品</button>
+                <button class="btn" onclick="loadProducts()">刷新</button>
+                <div class="search-box">
+                    <input type="text" id="product-search" placeholder="搜索商品名称...">
+                    <button class="btn btn-primary" onclick="searchProducts()">搜索</button>
+                </div>
+            </div>
+
+            <div id="products-loading" class="loading">加载中...</div>
+            
+            <table id="products-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>商品名称</th>
+                        <th>SKU</th>
+                        <th>库存</th>
+                        <th>价格(分)</th>
+                        <th>价格(元)</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="products-tbody">
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 订单管理 -->
+        <div id="orders-tab" class="tab-content">
+            <div class="toolbar">
+                <button class="btn btn-primary" onclick="showOrderModal()">+ 新增订单</button>
+                <button class="btn" onclick="loadOrders()">刷新</button>
+            </div>
+
+            <div id="orders-loading" class="loading">加载中...</div>
+            
+            <table id="orders-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>订单号</th>
+                        <th>商品ID</th>
+                        <th>总金额(元)</th>
+                        <th>创建时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="orders-tbody">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 商品模态框 -->
+    <div id="product-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="product-modal-title">新增商品</h2>
+                <span class="close-btn" onclick="closeProductModal()">×</span>
+            </div>
+            <form id="product-form">
+                <input type="hidden" id="product-id">
+                <div class="form-group">
+                    <label>商品名称 *</label>
+                    <input type="text" id="product-name" required>
+                </div>
+                <div class="form-group">
+                    <label>SKU *</label>
+                    <input type="text" id="product-sku" required>
+                </div>
+                <div class="form-group">
+                    <label>库存 *</label>
+                    <input type="number" id="product-stock" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label>价格(分) *</label>
+                    <input type="number" id="product-price" min="1" required>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">保存</button>
+                    <button type="button" class="btn" onclick="closeProductModal()">取消</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 订单模态框 -->
+    <div id="order-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="order-modal-title">新增订单</h2>
+                <span class="close-btn" onclick="closeOrderModal()">×</span>
+            </div>
+            <form id="order-form">
+                <input type="hidden" id="order-id">
+                <div class="form-group">
+                    <label>订单号 *</label>
+                    <input type="text" id="order-sn" required placeholder="例如: ORDER-20260206-001">
+                </div>
+                <div class="form-group">
+                    <label>商品ID列表 * (用逗号分隔)</label>
+                    <textarea id="order-product-ids" required placeholder="例如: 1,2,3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>总金额(分) *</label>
+                    <input type="number" id="order-total-amount" min="0" required>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">提交订单</button>
+                    <button type="button" class="btn" onclick="closeOrderModal()">取消</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = window.location.origin;
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProducts();
+            document.getElementById('product-form').addEventListener('submit', handleProductSubmit);
+            document.getElementById('order-form').addEventListener('submit', handleOrderSubmit);
+            document.getElementById('product-search').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') searchProducts();
+            });
+        });
+
+        // 切换标签页
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(tab + '-tab').classList.add('active');
+            
+            if (tab === 'products') {
+                loadProducts();
+            } else if (tab === 'orders') {
+                loadOrders();
+            }
+        }
+
+        // 显示提示消息
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        // ==================== 商品管理 ====================
+
+        async function loadProducts() {
+            const loading = document.getElementById('products-loading');
+            const tbody = document.getElementById('products-tbody');
+            
+            loading.classList.add('active');
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/products`);
+                const products = await response.json();
+                
+                if (products.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="7" class="empty-state">暂无商品数据</td></tr>';
+                } else {
+                    tbody.innerHTML = products.map(product => `
+                        <tr>
+                            <td>${product.id}</td>
+                            <td>${product.name}</td>
+                            <td>${product.sku}</td>
+                            <td><span class="badge ${product.stock > 0 ? 'badge-success' : 'badge-warning'}">${product.stock}</span></td>
+                            <td>${product.price}</td>
+                            <td class="price">¥${(product.price / 100).toFixed(2)}</td>
+                            <td>
+                                <div class="action-btns">
+                                    <button class="btn" onclick="editProduct(${product.id})">编辑</button>
+                                    <button class="btn btn-danger" onclick="deleteProduct(${product.id})">删除</button>
+                                </div>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+            } catch (error) {
+                showToast('加载商品列表失败: ' + error.message, 'error');
+                tbody.innerHTML = '<tr><td colspan="7" class="empty-state">加载失败</td></tr>';
+            } finally {
+                loading.classList.remove('active');
+            }
+        }
+
+        async function searchProducts() {
+            const keyword = document.getElementById('product-search').value.trim();
+            if (!keyword) {
+                loadProducts();
+                return;
+            }
+            
+            const loading = document.getElementById('products-loading');
+            const tbody = document.getElementById('products-tbody');
+            loading.classList.add('active');
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/product/list?keyword=${encodeURIComponent(keyword)}`);
+                const products = await response.json();
+                
+                if (products.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="7" class="empty-state">未找到匹配的商品</td></tr>';
+                } else {
+                    tbody.innerHTML = products.map(product => `
+                        <tr>
+                            <td>${product.id}</td>
+                            <td>${product.name}</td>
+                            <td>${product.sku}</td>
+                            <td><span class="badge ${product.stock > 0 ? 'badge-success' : 'badge-warning'}">${product.stock}</span></td>
+                            <td>${product.price}</td>
+                            <td class="price">¥${(product.price / 100).toFixed(2)}</td>
+                            <td>
+                                <div class="action-btns">
+                                    <button class="btn" onclick="editProduct(${product.id})">编辑</button>
+                                    <button class="btn btn-danger" onclick="deleteProduct(${product.id})">删除</button>
+                                </div>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+            } catch (error) {
+                showToast('搜索失败: ' + error.message, 'error');
+            } finally {
+                loading.classList.remove('active');
+            }
+        }
+
+        function showProductModal(product = null) {
+            const modal = document.getElementById('product-modal');
+            const title = document.getElementById('product-modal-title');
+            
+            if (product) {
+                title.textContent = '编辑商品';
+                document.getElementById('product-id').value = product.id;
+                document.getElementById('product-name').value = product.name;
+                document.getElementById('product-sku').value = product.sku;
+                document.getElementById('product-stock').value = product.stock;
+                document.getElementById('product-price').value = product.price;
+            } else {
+                title.textContent = '新增商品';
+                document.getElementById('product-form').reset();
+                document.getElementById('product-id').value = '';
+            }
+            
+            modal.classList.add('active');
+        }
+
+        function closeProductModal() {
+            document.getElementById('product-modal').classList.remove('active');
+            document.getElementById('product-form').reset();
+        }
+
+        async function handleProductSubmit(e) {
+            e.preventDefault();
+            
+            const id = document.getElementById('product-id').value;
+            const data = {
+                name: document.getElementById('product-name').value,
+                sku: document.getElementById('product-sku').value,
+                stock: parseInt(document.getElementById('product-stock').value),
+                price: parseInt(document.getElementById('product-price').value)
+            };
+            
+            try {
+                let response;
+                if (id) {
+                    response = await fetch(`${API_BASE_URL}/api/products/${id}`, {
+                        method: 'PUT',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify(data)
+                    });
+                } else {
+                    response = await fetch(`${API_BASE_URL}/api/products`, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify(data)
+                    });
+                }
+                
+                if (response.ok) {
+                    showToast(id ? '商品更新成功' : '商品创建成功', 'success');
+                    closeProductModal();
+                    loadProducts();
+                } else {
+                    const error = await response.json();
+                    showToast(error.message || '操作失败', 'error');
+                }
+            } catch (error) {
+                showToast('操作失败: ' + error.message, 'error');
+            }
+        }
+
+        async function editProduct(id) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/products/${id}`);
+                const product = await response.json();
+                showProductModal(product);
+            } catch (error) {
+                showToast('获取商品信息失败: ' + error.message, 'error');
+            }
+        }
+
+        async function deleteProduct(id) {
+            if (!confirm('确定要删除这个商品吗?')) return;
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/products/${id}`, {
+                    method: 'DELETE'
+                });
+                
+                if (response.ok) {
+                    showToast('商品删除成功', 'success');
+                    loadProducts();
+                } else {
+                    showToast('删除失败', 'error');
+                }
+            } catch (error) {
+                showToast('删除失败: ' + error.message, 'error');
+            }
+        }
+
+        // ==================== 订单管理 ====================
+
+        async function loadOrders() {
+            const loading = document.getElementById('orders-loading');
+            const tbody = document.getElementById('orders-tbody');
+            
+            loading.classList.add('active');
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/orders`);
+                const orders = await response.json();
+                
+                if (orders.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="empty-state">暂无订单数据</td></tr>';
+                } else {
+                    tbody.innerHTML = orders.map(order => `
+                        <tr>
+                            <td>${order.id}</td>
+                            <td>${order.orderSn}</td>
+                            <td>${order.productIds.join(', ')}</td>
+                            <td class="price">¥${(order.totalAmount / 100).toFixed(2)}</td>
+                            <td>${new Date(order.createdAt).toLocaleString('zh-CN')}</td>
+                            <td>
+                                <button class="btn btn-danger" onclick="deleteOrder(${order.id})">删除</button>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+            } catch (error) {
+                showToast('加载订单列表失败: ' + error.message, 'error');
+                tbody.innerHTML = '<tr><td colspan="6" class="empty-state">加载失败</td></tr>';
+            } finally {
+                loading.classList.remove('active');
+            }
+        }
+
+        function showOrderModal() {
+            const modal = document.getElementById('order-modal');
+            document.getElementById('order-form').reset();
+            document.getElementById('order-id').value = '';
+            modal.classList.add('active');
+        }
+
+        function closeOrderModal() {
+            document.getElementById('order-modal').classList.remove('active');
+            document.getElementById('order-form').reset();
+        }
+
+        async function handleOrderSubmit(e) {
+            e.preventDefault();
+            
+            const productIdsStr = document.getElementById('order-product-ids').value;
+            const productIds = productIdsStr.split(',').map(id => parseInt(id.trim())).filter(id => !isNaN(id));
+            
+            if (productIds.length === 0) {
+                showToast('请输入有效的商品ID', 'error');
+                return;
+            }
+            
+            const data = {
+                orderSn: document.getElementById('order-sn').value,
+                productIds: productIds,
+                totalAmount: parseInt(document.getElementById('order-total-amount').value)
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/orders`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(data)
+                });
+                
+                if (response.ok) {
+                    showToast('订单创建成功', 'success');
+                    closeOrderModal();
+                    loadOrders();
+                } else {
+                    const error = await response.json();
+                    showToast(error.message || '操作失败', 'error');
+                }
+            } catch (error) {
+                showToast('操作失败: ' + error.message, 'error');
+            }
+        }
+
+        async function deleteOrder(id) {
+            if (!confirm('确定要删除这个订单吗?')) return;
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/orders/${id}`, {
+                    method: 'DELETE'
+                });
+                
+                if (response.ok) {
+                    showToast('订单删除成功', 'success');
+                    loadOrders();
+                } else {
+                    showToast('删除失败', 'error');
+                }
+            } catch (error) {
+                showToast('删除失败: ' + error.message, 'error');
+            }
+        }
+    </script>
+</body>
+</html>

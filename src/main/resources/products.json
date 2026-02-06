@@ -1,0 +1,122 @@
+[
+  {
+    "name": "新疆阿克苏苹果 5斤装",
+    "sku": "FRUIT-APPLE-5KG",
+    "stock": 500,
+    "price": 4980
+  },
+  {
+    "name": "泰国金枕头榴莲 2-3斤",
+    "sku": "FRUIT-DURIAN-2KG",
+    "stock": 80,
+    "price": 15800
+  },
+  {
+    "name": "智利进口车厘子 500g",
+    "sku": "FRUIT-CHERRY-500G",
+    "stock": 150,
+    "price": 8900
+  },
+  {
+    "name": "海南金煌芒果 3斤装",
+    "sku": "FRUIT-MANGO-3KG",
+    "stock": 200,
+    "price": 3980
+  },
+  {
+    "name": "云南高原蓝莓 250g",
+    "sku": "FRUIT-BLUEBERRY-250G",
+    "stock": 180,
+    "price": 3680
+  },
+  {
+    "name": "三只松鼠每日坚果 750g",
+    "sku": "SNACK-NUT-750G",
+    "stock": 300,
+    "price": 9900
+  },
+  {
+    "name": "乐事薯片经典原味 104g*3包",
+    "sku": "SNACK-CHIPS-312G",
+    "stock": 450,
+    "price": 1980
+  },
+  {
+    "name": "德芙巧克力礼盒装 280g",
+    "sku": "SNACK-CHOCOLATE-280G",
+    "stock": 180,
+    "price": 6800
+  },
+  {
+    "name": "良品铺子零食大礼包",
+    "sku": "SNACK-GIFT-BOX",
+    "stock": 120,
+    "price": 12800
+  },
+  {
+    "name": "旺旺雪饼仙贝大礼包 520g",
+    "sku": "SNACK-WANGWANG-520G",
+    "stock": 280,
+    "price": 3580
+  },
+  {
+    "name": "《红楼梦》四大名著珍藏版",
+    "sku": "BOOK-HONGLOUMENG-001",
+    "stock": 200,
+    "price": 3900
+  },
+  {
+    "name": "《明朝那些事儿》当年明月著",
+    "sku": "BOOK-MINGCHAO-001",
+    "stock": 150,
+    "price": 4800
+  },
+  {
+    "name": "《Python编程从入门到实践》",
+    "sku": "BOOK-PYTHON-001",
+    "stock": 180,
+    "price": 8900
+  },
+  {
+    "name": "《平凡的世界》路遥著",
+    "sku": "BOOK-PINGFAN-001",
+    "stock": 160,
+    "price": 5800
+  },
+  {
+    "name": "《Java核心技术》卷I 基础知识",
+    "sku": "BOOK-JAVA-CORE-01",
+    "stock": 120,
+    "price": 12900
+  },
+  {
+    "name": "得力文具套装 学生必备",
+    "sku": "STATIONERY-SET-01",
+    "stock": 350,
+    "price": 4500
+  },
+  {
+    "name": "晨光按动中性笔 0.5mm 黑色 12支装",
+    "sku": "STATIONERY-PEN-12",
+    "stock": 500,
+    "price": 2400
+  },
+  {
+    "name": "立白洗衣液 3kg*2桶",
+    "sku": "DAILY-DETERGENT-6KG",
+    "stock": 200,
+    "price": 5980
+  },
+  {
+    "name": "舒肤佳香皂 125g*6块",
+    "sku": "DAILY-SOAP-750G",
+    "stock": 320,
+    "price": 2980
+  },
+  {
+    "name": "维达抽纸 3层130抽*24包",
+    "sku": "DAILY-TISSUE-24PACK",
+    "stock": 400,
+    "price": 6980
+  }
+]
