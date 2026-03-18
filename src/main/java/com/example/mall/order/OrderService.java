@@ -1,8 +1,12 @@
 package com.example.mall.order;
 
+import com.example.mall.common.BusinessException;
 import com.example.mall.common.ResourceNotFoundException;
+import com.example.mall.common.ResultCode;
+import com.example.mall.common.SpecBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,7 +55,47 @@ public class OrderService {
     }
 
     public Integer countProductQuantityByConditions(OrderStatisticsQuery query) {
+        log.info("开始统计订单商品数量, 查询条件: {}", query);
 
-        return null;
+        // 构建动态查询条件
+        Specification<Order> spec = buildSpecification(query);
+
+        // 查询符合条件的订单
+        List<Order> orders = orderRepository.findAll(spec);
+        log.info("查询到 {} 条订单", orders.size());
+
+        // 校验：未查询到订单则抛出异常
+        if (orders.isEmpty()) {
+            throw new BusinessException(ResultCode.ORDER_NOT_FOUND);
+        }
+
+        // 统计商品总数量
+        int totalQuantity = orders.stream()
+                .flatMap(order -> order.getOrderItems().stream())
+                .mapToInt(OrderItem::getQuantity)
+                .sum();
+
+        log.info("订单商品总数量: {}", totalQuantity);
+
+        // 校验：订单存在但无商品则抛出异常
+        if (totalQuantity == 0) {
+            throw new BusinessException("订单存在但无商品");
+        }
+
+        log.info("订单商品数量统计完成");
+        return totalQuantity;
+    }
+
+    /**
+     * 构建动态查询条件
+     */
+    private Specification<Order> buildSpecification(OrderStatisticsQuery query) {
+        return SpecBuilder.ins(Order.class)
+                .addEq("userId", query.getUserId())
+                .addLike("orderSn", query.getOrderSn())
+                .addEq("status", query.getStatus())
+                .addGreaterThanOrEqual("createdAt", query.getStartTime())
+                .addLessThanOrEqual("createdAt", query.getEndTime())
+                .builder();
     }
 }
