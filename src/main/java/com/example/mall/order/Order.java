@@ -1,64 +1,33 @@
 package com.example.mall.order;
 
+import lombok.Data;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
+@Data
+@Entity
+@Table(name = "orders")
 public class Order {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String orderSn;
-    private List<Long> productIds;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderItem> orderItems = new ArrayList<>();
+
     private Integer totalAmount;
+
     private LocalDateTime createdAt;
-
-    public Order() {
-    }
-
-    public Order(Long id, String orderSn, List<Long> productIds, Integer totalAmount, LocalDateTime createdAt) {
-        this.id = id;
-        this.orderSn = orderSn;
-        this.productIds = productIds;
-        this.totalAmount = totalAmount;
-        this.createdAt = createdAt;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getOrderSn() {
-        return orderSn;
-    }
-
-    public void setOrderSn(String orderSn) {
-        this.orderSn = orderSn;
-    }
-
-    public List<Long> getProductIds() {
-        return productIds;
-    }
-
-    public void setProductIds(List<Long> productIds) {
-        this.productIds = productIds;
-    }
-
-    public Integer getTotalAmount() {
-        return totalAmount;
-    }
-
-    public void setTotalAmount(Integer totalAmount) {
-        this.totalAmount = totalAmount;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
 }
