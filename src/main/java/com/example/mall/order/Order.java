@@ -30,4 +30,8 @@ public class Order {
     private Integer totalAmount;
 
     private LocalDateTime createdAt;
+
+    private Integer status;
+
+    private Long userId;
 }

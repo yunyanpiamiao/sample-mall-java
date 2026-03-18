@@ -1,5 +1,6 @@
 package com.example.mall.order;
 
+import com.example.mall.common.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -49,5 +50,11 @@ public class OrderController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         orderService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/statistics/product-quantity")
+    public ApiResponse<Integer> countProductQuantity(@RequestBody OrderStatisticsQuery query) {
+        Integer totalQuantity = orderService.countProductQuantityByConditions(query);
+        return ApiResponse.success(totalQuantity);
     }
 }
